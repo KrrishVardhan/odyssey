@@ -66,7 +66,7 @@
             <!-- Hamburger -->
             <div class="-me-2 flex items-center sm:hidden">
                 <button @click="open = ! open"
-                    class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out">
+                    class="inline-flex items-center justify-center p-2 rounded-md text-primary hover:text-primary/50 hover:bg-secondary focus:outline-none focus:bg-secondary focus:text-primary transition duration-150 ease-in-out">
                     <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
                         <path :class="{ 'hidden': open, 'inline-flex': !open }" class="inline-flex"
                             stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -88,10 +88,17 @@
         </div>
 
         <!-- Responsive Settings Options -->
-        <div class="pt-4 pb-1 border-t border-gray-200">
+        <div class="pt-4 pb-1 border-t border-border">
+            <button
+                onclick="document.documentElement.classList.toggle('dark'); localStorage.theme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';"
+                class="p-2 rounded-lg hover:bg-muted text-muted-foreground hover:text-foreground transition">
+                <x-lucide-sun class="w-4 h-4 dark:hidden" />
+                <x-lucide-moon class="w-4 h-4 hidden dark:block" />
+            </button>
+
             <div class="px-4">
-                <div class="font-medium text-base text-gray-800">{{ Auth::user()->name }}</div>
-                <div class="font-medium text-sm text-gray-500">{{ Auth::user()->email }}</div>
+                <div class="font-medium text-base text-chart-1">{{ Auth::user()->name }}</div>
+                <div class="font-medium text-sm text-muted-foreground">{{ Auth::user()->email }}</div>
             </div>
 
             <div class="mt-3 space-y-1">

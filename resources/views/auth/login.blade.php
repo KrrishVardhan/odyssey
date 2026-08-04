@@ -30,7 +30,7 @@
 
         <label for="remember_me" class="flex items-center gap-2 cursor-pointer">
             <input id="remember_me" type="checkbox" name="remember"
-                class="rounded border-input text-primary focus:ring-ring focus:ring-offset-0">
+                class="rounded border-input text-primary focus:ring-ring focus:ring-offset-0 bg-secondary">
             <span class="text-sm text-muted-foreground">{{ __('Remember me') }}</span>
         </label>
 

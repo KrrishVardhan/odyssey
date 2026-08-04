@@ -3,22 +3,18 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Task extends Model
 {
-    protected $fillable = [
-        'user_id',
-        'title',
-        'description',
-        'status',
-        'priority',
-        'due_date',
-        'completed_at',
-    ];
+    protected $fillable = ['team_id', 'created_by', 'title', 'description', 'priority', 'due_date'];
 
-    public function user(): BelongsTo
+    public function team()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(Team::class);
+    }
+
+    public function assignments()
+    {
+        return $this->hasMany(TaskAssignment::class);
     }
 }

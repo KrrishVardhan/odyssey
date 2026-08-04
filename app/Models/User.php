@@ -30,7 +30,8 @@ use Illuminate\Support\Carbon;
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory;
+    use Notifiable;
 
     /**
      * Get the attributes that should be cast.
@@ -42,11 +43,29 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
-            'is_active' => 'boolean'
+            'is_active' => 'boolean',
         ];
     }
     public function tasks(): HasMany
     {
         return $this->hasMany(Task::class);
+    }
+
+    // TEAMS
+    public function teams()
+    {
+        return $this->belongsToMany(Team::class, 'team_user')
+            ->withPivot('role', 'joined_at')
+            ->withTimestamps();
+    }
+
+    public function taskAssignments()
+    {
+        return $this->hasMany(TaskAssignment::class);
+    }
+
+    public function roleInTeam(Team $team): ?string
+    {
+        return $this->teams()->where('team_id', $team->id)->first()?->pivot->role;
     }
 }

@@ -39,11 +39,43 @@
         @endforeach
 
         {{-- Add team — placeholder, questionnaire flow comes later --}}
-        <button
+        <button x-data x-on:click="$dispatch('create-team-modal')"
             class="flex items-center justify-center w-12 h-12 shrink-0 rounded-2xl border-2 border-dashed border-border text-muted-foreground hover:border-primary hover:text-primary hover:rounded-xl transition-all duration-200">
             <x-lucide-plus class="w-5 h-5" />
         </button>
     </div>
 
+    <div class="w-8 h-px bg-border my-2"></div>
     <x-user-card />
 </aside>
+
+<x-modal name="create-team-modal" focusable>
+    <form method="POST" action="{{ route('teams.store') }}" class="p-6">
+        @csrf
+        <h2 class="text-lg font-semibold text-foreground">Create a team</h2>
+        <p class="text-sm text-muted-foreground mt-1">Give it a name — you'll be the leader.</p>
+
+        <div class="mt-5">
+            <x-input-label for="team_name" value="Team name" />
+            <x-text-input id="team_name" name="name" type="text" class="block mt-1.5 w-full" required autofocus
+                placeholder="Odyssey Core" />
+            <x-input-error :messages="$errors->get('name')" class="mt-2" />
+        </div>
+
+        <div class="mt-4">
+            <x-input-label for="team_description" value="Description (optional)" />
+            <textarea id="team_description" name="description" rows="3"
+                class="w-full mt-1.5 rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                placeholder="What is this team working on?"></textarea>
+            <x-input-error :messages="$errors->get('description')" class="mt-2" />
+        </div>
+
+        <div class="mt-6 flex justify-end gap-3">
+            <button type="button" x-on:click="$dispatch('close')"
+                class="px-4 py-2 text-sm text-muted-foreground hover:text-foreground transition-colors">
+                Cancel
+            </button>
+            <x-primary-button>Create team</x-primary-button>
+        </div>
+    </form>
+</x-modal>

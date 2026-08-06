@@ -1,6 +1,6 @@
-<div class="w-full px-2 pt-3 border-t border-border relative">
+<div class="w-full px-2 pt-3 relative">
     <button onclick="document.getElementById('user-menu').classList.toggle('hidden')"
-        class="flex items-center justify-center w-12 h-12 mx-auto rounded-2xl bg-secondary hover:rounded-xl transition-all duration-200 overflow-hidden cursor-pointer">
+        class="flex items-center justify-center w-12 h-12 mx-auto rounded-3xl bg-secondary hover:rounded-xl transition-all duration-200 overflow-hidden cursor-pointer">
         @if (auth()->user()->avatar)
             <img src="{{ auth()->user()->avatar }}" class="w-full h-full object-cover">
         @else

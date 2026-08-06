@@ -24,4 +24,8 @@ class TaskPolicy
     {
         return $task->team->members()->where('user_id', $user->id)->exists();
     }
+    public function createOwn(User $user, Team $team): bool
+    {
+        return $team->members()->where('user_id', $user->id)->exists();
+    }
 }

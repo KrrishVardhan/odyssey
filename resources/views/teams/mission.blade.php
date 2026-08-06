@@ -71,4 +71,50 @@
             </div>
         </div>
     </div>
+    <x-modal name="create-task-modal" focusable>
+        <form method="POST" action="{{ route('teams.tasks.store', $team) }}" class="p-6">
+            @csrf
+            <h2 class="text-lg font-semibold text-foreground">New task</h2>
+            <p class="text-sm text-muted-foreground mt-1">Add a task to {{ $team->name }}'s board.</p>
+
+            <div class="mt-5">
+                <x-input-label for="task_title" value="Title" />
+                <x-text-input id="task_title" name="title" type="text" class="block mt-1.5 w-full" required
+                    autofocus placeholder="Set up CI pipeline" />
+                <x-input-error :messages="$errors->get('title')" class="mt-2" />
+            </div>
+
+            <div class="mt-4">
+                <x-input-label for="task_description" value="Description (optional)" />
+                <textarea id="task_description" name="description" rows="3"
+                    class="w-full mt-1.5 rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"></textarea>
+                <x-input-error :messages="$errors->get('description')" class="mt-2" />
+            </div>
+
+            <div class="grid grid-cols-2 gap-4 mt-4">
+                <div>
+                    <x-input-label for="task_priority" value="Priority" />
+                    <select id="task_priority" name="priority"
+                        class="w-full mt-1.5 rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring">
+                        <option value="low">Low</option>
+                        <option value="medium" selected>Medium</option>
+                        <option value="high">High</option>
+                    </select>
+                </div>
+                <div>
+                    <x-input-label for="task_due_date" value="Due date (optional)" />
+                    <x-text-input id="task_due_date" name="due_date" type="date" class="block mt-1.5 w-full" />
+                    <x-input-error :messages="$errors->get('due_date')" class="mt-2" />
+                </div>
+            </div>
+
+            <div class="mt-6 flex justify-end gap-3">
+                <button type="button" x-on:click="$dispatch('close')"
+                    class="px-4 py-2 text-sm text-muted-foreground hover:text-foreground transition-colors">
+                    Cancel
+                </button>
+                <x-primary-button>Create task</x-primary-button>
+            </div>
+        </form>
+    </x-modal>
 </x-app-layout>

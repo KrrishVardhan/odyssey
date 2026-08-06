@@ -1,8 +1,19 @@
 <x-app-layout :active-team-id="$team->id">
-    <div class="flex h-screen">
+    <div class="flex h-screen relative">
         <x-team-nav :team="$team" active="mission" />
 
         <div class="flex-1 overflow-x-auto p-6">
+            <div class="flex items-center justify-between">
+                @if (in_array(auth()->user()->roleInTeam($team), ['leader', 'co_leader']))
+                    <button x-data x-on:click="$dispatch('create-task-modal')"
+                        class="absolute bottom-6 right-6 z-20 inline-flex items-center gap-2
+                   p-4 rounded-full bg-primary text-primary-foreground
+                   shadow-lg hover:scale-[1.02] transition">
+                        <x-lucide-plus class="w-8 h-8" />
+                    </button>
+                @endif
+            </div>
+
             <div class="flex gap-5 h-full min-w-max">
 
                 @php
@@ -31,8 +42,10 @@
                                         <p class="text-sm font-medium text-card-foreground leading-snug">
                                             {{ $task->title }}</p>
                                         @if ($task->priority === 'high')
+                                            <span class="w-1.5 h-1.5 rounded-full bg-chart-1 shrink-0 mt-1.5"></span>
+                                        @elseif ($task->priority === 'low')
                                             <span
-                                                class="w-1.5 h-1.5 rounded-full bg-destructive shrink-0 mt-1.5"></span>
+                                                class="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0 mt-1.5"></span>
                                         @endif
                                     </div>
 
@@ -50,6 +63,7 @@
                                         @endif
 
                                         @php $assignee = $task->assignments->sortByDesc('created_at')->first()?->assignee; @endphp
+
                                         @if ($assignee)
                                             <div class="w-6 h-6 rounded-full bg-secondary flex items-center justify-center"
                                                 title="{{ $assignee->name }}">
@@ -58,6 +72,18 @@
                                                     {{ substr($assignee->name, 0, 1) }}
                                                 </span>
                                             </div>
+                                        @elseif (in_array(auth()->user()->roleInTeam($team), ['leader', 'co_leader']))
+                                            <form method="POST" action="{{ route('tasks.assign', $task) }}"
+                                                onclick="event.stopPropagation()">
+                                                @csrf
+                                                <select name="user_id" onchange="this.form.submit()"
+                                                    class="text-xs bg-muted border border-border rounded-md px-1.5 py-1 text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring">
+                                                    <option value="">Assign to...</option>
+                                                    @foreach ($team->members as $member)
+                                                        <option value="{{ $member->id }}">{{ $member->name }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </form>
                                         @endif
                                     </div>
                                 </div>

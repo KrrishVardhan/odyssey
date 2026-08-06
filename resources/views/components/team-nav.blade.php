@@ -10,14 +10,6 @@
     <div class="w-[90%] h-px bg-border my-2 mx-auto"></div>
 
     <nav class="flex flex-col p-3 gap-1">
-        <div class="flex items-center justify-between mb-5">
-            <button x-data x-on:click="$dispatch('create-task-modal')"
-                class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-primary text-primary-foreground rounded-lg text-sm font-medium hover:opacity-90 transition">
-                <x-lucide-plus class="w-4 h-4" />
-                New Task
-            </button>
-        </div>
-
         <a href="{{ route('teams.show', $team) }}"
             class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium transition-colors
                   {{ $active === 'mission' ? 'bg-secondary text-foreground' : 'text-muted-foreground hover:bg-muted hover:text-foreground' }}">

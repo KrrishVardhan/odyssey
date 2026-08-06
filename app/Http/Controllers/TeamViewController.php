@@ -52,9 +52,21 @@ class TeamViewController extends Controller
             ->latest()
             ->get();
 
-        return view('teams.workspace', [
-            'team' => $team,
-            'assignments' => $assignments,
-        ]);
+        $columns = [
+            'pending' => collect(),
+            'in_progress' => collect(),
+            'completed' => collect(),
+        ];
+
+        foreach ($assignments as $assignment) {
+            match (true) {
+                $assignment->status === 'pending' => $columns['pending']->push($assignment),
+                in_array($assignment->status, ['accepted', 'in_progress']) => $columns['in_progress']->push($assignment),
+                $assignment->status === 'completed' => $columns['completed']->push($assignment),
+                default => null, // rejected assignments drop off the board entirely
+            };
+        }
+
+        return view('teams.workspace', ['team' => $team, 'columns' => $columns]);
     }
 }

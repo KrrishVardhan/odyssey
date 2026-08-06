@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Task extends Model
 {
     protected $fillable = ['team_id', 'created_by', 'title', 'description', 'priority', 'due_date'];
+    protected $casts = ['due_date' => 'date'];
 
     public function team()
     {

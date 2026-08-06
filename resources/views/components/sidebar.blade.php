@@ -1,4 +1,5 @@
-<aside class="fixed inset-y-0 left-0 w-20 bg-card border-r border-border flex flex-col items-center py-4 z-40">
+<aside
+    class="fixed inset-y-0 left-0 w-20 bg-card border border-border flex flex-col items-center py-4 z-40 m-2 rounded-xl">
 
     {{-- Home --}}
     <a href="{{ route('dashboard') }}"
@@ -6,10 +7,7 @@
               {{ request()->routeIs('dashboard')
                   ? 'bg-primary text-primary-foreground rounded-xl'
                   : 'bg-muted text-muted-foreground hover:bg-primary hover:text-primary-foreground hover:rounded-xl' }}">
-        @if (request()->routeIs('dashboard'))
-            <span class="absolute -left-5 w-1 h-8 rounded-r-full" style="background-color: var(--chart-1);"></span>
-        @endif
-        <x-lucide-home class="w-5 h-5" />
+        <x-application-logo class="block h-9 w-auto fill-current" />
     </a>
 
     <div class="w-8 h-px bg-border my-2"></div>

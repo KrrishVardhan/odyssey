@@ -11,7 +11,7 @@
     </button>
 
     <div id="user-menu"
-        class="hidden absolute bottom-2 left-16 w-48 bg-card border border-border rounded-lg shadow-lg py-1 z-50">
+        class="hidden absolute bottom-2 left-16 bg-card border border-border rounded-lg shadow-lg py-1 z-50">
         <div class="px-3 py-2 border-b border-border flex items-center justify-between">
             <div>
                 <p class="text-sm font-medium text-card-foreground truncate">{{ auth()->user()->name }}</p>

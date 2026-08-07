@@ -34,7 +34,8 @@
                             </span>
                         </div>
 
-                        <div class="flex-1 bg-muted/40 rounded-xl p-2 space-y-2 overflow-y-auto">
+                        {{-- Kanban board ye rha --}}
+                        <div class="flex-1 bg-muted/40 rounded-xl p-2 space-y-2 overflow-y-auto border-2 border-dashed border-border">
                             @forelse ($columns[$key] as $task)
                                 <div
                                     class="bg-card border border-border rounded-lg p-3 hover:border-foreground/20 transition-colors cursor-pointer">

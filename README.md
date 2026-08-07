@@ -62,7 +62,7 @@ Profile settings for updating user details and account security.
 - Alpine.js
 - Tailwind CSS 4
 - Vite
-- SQLite default database configuration
+- Database: MySQL
 - Lucide icons via `mallardduck/blade-lucide-icons`
 
 ## Project Metrics

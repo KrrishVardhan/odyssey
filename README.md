@@ -168,7 +168,7 @@ app
 ## Getting Started
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/KrrishVardhan/odyssey
 cd theodyssey
 composer install
 npm install

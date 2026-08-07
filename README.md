@@ -84,15 +84,85 @@ Odyssey uses a Laravel backend with a Blade-rendered web layer for session-authe
 ## Project Structure
 
 ```text
-app/
-bootstrap/
-config/
-database/
-public/
-resources/
-routes/
-storage/
-tests/
+.
+├── README.md
+├── app
+│   ├── Http
+│   ├── Models
+│   ├── Policies
+│   ├── Providers
+│   └── View
+├── artisan
+├── bootstrap
+│   ├── app.php
+│   └── providers.php
+├── composer.json
+├── composer.lock
+├── config
+│   ├── app.php
+│   ├── auth.php
+│   ├── cache.php
+│   ├── database.php
+│   ├── filesystems.php
+│   ├── logging.php
+│   ├── mail.php
+│   ├── queue.php
+│   ├── sanctum.php
+│   ├── services.php
+│   └── session.php
+├── database
+│   ├── database.sqlite
+│   ├── factories
+│   ├── migrations
+│   └── seeders
+├── package-lock.json
+├── package.json
+├── phpunit.xml
+├── public
+│   ├── favicon.ico
+│   ├── hot
+│   ├── index.php
+│   ├── robots.txt
+│   └── screenshots
+├── resources
+│   ├── css
+│   ├── js
+│   └── views
+├── routes
+│   ├── api.php
+│   ├── auth.php
+│   ├── console.php
+│   └── web.php
+├── tests
+│   ├── Feature
+│   ├── TestCase.php
+│   └── Unit
+└── vite.config.js
+
+23 directories, 31 files
+```
+
+## App Structure
+
+```text
+app
+├── Http
+│   ├── Controllers
+│   └── Requests
+├── Models
+│   ├── Task.php
+│   ├── TaskAssignment.php
+│   ├── Team.php
+│   └── User.php
+├── Policies
+│   ├── TaskPolicy.php
+│   └── TeamPolicy.php
+├── Providers
+│   └── AppServiceProvider.php
+└── View
+    └── Components
+
+9 directories, 7 files
 ```
 
 ## Getting Started

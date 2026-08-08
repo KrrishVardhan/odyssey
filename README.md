@@ -20,8 +20,6 @@ Version v1.0.0 delivers the core task management and collaboration workflow: tea
 
 ## Screenshots
 
-Placeholder paths are listed below until exported screenshots are added to the repository.
-
 ### Authentication
 
 Combined Login and Register screen.

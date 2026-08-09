@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\MessageSent;
 use App\Models\Team;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class ChatController extends Controller
 {
@@ -53,6 +55,7 @@ class ChatController extends Controller
         ]);
     }
 
+    // reverb
     public function store(Request $request, Team $team)
     {
         $this->authorize('viewTeamTasks', $team);
@@ -63,6 +66,12 @@ class ChatController extends Controller
             'user_id' => $request->user()->id,
             'body' => $validated['body'],
         ]);
+
+        try {
+            broadcast(new MessageSent($message))->toOthers();
+        } catch (\Throwable $e) {
+            Log::warning('Broadcast failed: ' . $e->getMessage());
+        }
 
         return response()->json([
             'id' => $message->id,

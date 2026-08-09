@@ -58,7 +58,6 @@
 
     </div>
 
-    <div class="w-8 h-px bg-border my-2"></div>
     <x-user-card />
 </aside>
 

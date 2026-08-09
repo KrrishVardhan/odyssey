@@ -14,13 +14,13 @@ class DatabaseSeeder extends Seeder
     {
         // --- Team A: Leaf Village ---
         $leafLeader = User::create([
-            'name' => 'Naruto',
-            'email' => 'naruto@demo.com',
+            'name' => 'Krrish',
+            'email' => 'krrish@demo.com',
             'password' => bcrypt('12345678'),
             'email_verified_at' => now(),
         ]);
 
-        $leafMembers = collect(['Sakura', 'Sasuke', 'Kakashi', 'Hinata'])->map(fn($name) => User::create([
+        $leafMembers = collect(['SUDO', 'hyt', 'maomao', 'Levi'])->map(fn($name) => User::create([
             'name' => $name,
             'email' => strtolower($name) . '@demo.com',
             'password' => bcrypt('12345678'),
@@ -29,9 +29,9 @@ class DatabaseSeeder extends Seeder
 
         $leafVillage = Team::create([
             'owner_id' => $leafLeader->id,
-            'name' => 'Leaf Village',
+            'name' => 'Leaf Village!',
             'slug' => 'leaf-village-' . Str::random(5),
-            'description' => 'Building the future of decentralized shinobi comms.',
+            'description' => 'The Best Tech community!',
         ]);
 
         $leafVillage->members()->attach($leafLeader->id, ['role' => 'leader', 'joined_at' => now()]);

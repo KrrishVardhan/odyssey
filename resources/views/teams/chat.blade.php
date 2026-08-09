@@ -20,7 +20,7 @@
 
                 <template x-for="message in messages" :key="message.id">
                     <div class="flex gap-3 py-1.5" :class="message.is_me ? 'flex-row-reverse' : ''">
-                        {{--Avatar--}}
+                        {{-- Avatar --}}
                         <div class="w-8 h-8 rounded-full bg-secondary flex items-center justify-center shrink-0 mt-0.5">
                             <span class="text-xs font-mono font-semibold text-secondary-foreground"
                                 x-text="message.user_name.charAt(0)"></span>
@@ -47,7 +47,7 @@
                     class="flex-1 rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent">
                 <button type="submit"
                     class="p-4 bg-primary text-primary-foreground rounded-lg text-sm font-medium hover:opacity-90 transition">
-                    <x-lucide-send class="w-4 h-4"/>
+                    <x-lucide-send class="w-4 h-4" />
                 </button>
             </form>
         </div>
@@ -76,6 +76,19 @@
 
             init() {
                 this.$nextTick(() => this.scrollToBottom());
+
+                // reverb
+                window.Echo.private(`team.${teamId}`)
+                    .listen('MessageSent', (e) => {
+                        this.messages.push({
+                            id: e.id,
+                            body: e.body,
+                            user_name: e.user_name,
+                            is_me: e.user_id === {{ auth()->id() }},
+                            created_at: e.created_at,
+                        });
+                        this.$nextTick(() => this.scrollToBottom());
+                    });
             },
 
             scrollToBottom() {
@@ -113,20 +126,31 @@
                 const body = this.draft;
                 this.draft = '';
 
-                const res = await fetch(`/teams/${teamId}/chat`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                    },
-                    body: JSON.stringify({
-                        body
-                    }),
-                });
+                try {
+                    const res = await fetch(`/teams/${teamId}/chat`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                        },
+                        body: JSON.stringify({
+                            body
+                        }),
+                    });
 
-                const message = await res.json();
-                this.messages.push(message);
-                this.$nextTick(() => this.scrollToBottom());
+                    if (!res.ok) throw new Error(`Send failed: ${res.status}`);
+
+                    const message = await res.json();
+                    console.log('received back from server:', message);
+                    console.log('messages array before push:', this.messages.length);
+
+
+                    console.log('messages array after push:', this.messages.length);
+                    this.$nextTick(() => this.scrollToBottom());
+                } catch (e) {
+                    console.error('send() failed:', e);
+                    this.draft = body;
+                }
             }
         }
     }

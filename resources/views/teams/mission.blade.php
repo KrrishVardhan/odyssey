@@ -2,7 +2,7 @@
     <div class="flex h-screen relative">
         <x-team-nav :team="$team" active="mission" />
 
-        <div class="flex-1 overflow-x-auto p-6">
+        <div class="flex-1 overflow-x-auto p-6" x-data="{ selectedTask: null }">
             <div class="flex items-center justify-between">
                 @if (in_array(auth()->user()->roleInTeam($team), ['leader', 'co_leader']))
                     <button x-data x-on:click="$dispatch('create-task-modal')"
@@ -35,10 +35,26 @@
                         </div>
 
                         {{-- Kanban board ye rha --}}
-                        <div class="flex-1 bg-muted/40 rounded-xl p-2 space-y-2 overflow-y-auto border-2 border-dashed border-border">
+                        <div
+                            class="flex-1 bg-muted/40 rounded-xl p-2 space-y-2 overflow-y-auto border-2 border-dashed border-border">
                             @forelse ($columns[$key] as $task)
-                                <div
-                                    class="bg-card border border-border rounded-lg p-3 hover:border-foreground/20 transition-colors cursor-pointer">
+                                @php
+                                    $latest = $task->assignments->sortByDesc('created_at')->first();
+
+                                    $taskData = [
+                                        'title' => $task->title,
+                                        'description' => $task->description,
+                                        'priority' => $task->priority,
+                                        'due_date' => $task->due_date?->format('M j, Y'),
+                                        'assignee_name' => $latest?->assignee?->name,
+                                        'status' => $latest?->status ?? 'pending',
+                                        'creator_name' => $task->creator->name,
+                                        'rejection_reason' => $latest?->rejection_reason,
+                                    ];
+                                @endphp
+
+                                <div class="bg-card border border-border rounded-lg p-3 hover:border-foreground/20 transition-colors cursor-pointer"
+                                    x-on:click="selectedTask = @js($taskData)">
                                     <div class="flex items-start justify-between gap-2">
                                         <p class="text-sm font-medium text-card-foreground leading-snug">
                                             {{ $task->title }}</p>
@@ -81,7 +97,8 @@
                                                     class="text-xs bg-muted border border-border rounded-md px-1.5 py-1 text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring">
                                                     <option value="">Assign to...</option>
                                                     @foreach ($team->members as $member)
-                                                        <option value="{{ $member->id }}">{{ $member->name }}</option>
+                                                        <option value="{{ $member->id }}">{{ $member->name }}
+                                                        </option>
                                                     @endforeach
                                                 </select>
                                             </form>
@@ -94,8 +111,8 @@
                         </div>
                     </div>
                 @endforeach
-
             </div>
+            <x-task-detail-modal />
         </div>
     </div>
     <x-modal name="create-task-modal" focusable>

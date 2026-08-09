@@ -70,4 +70,10 @@ class User extends Authenticatable
     {
         return $this->teams()->where('team_id', $team->id)->first()?->pivot->role;
     }
+
+    // app notifications
+    public function appNotifications()
+    {
+        return $this->hasMany(AppNotification::class);
+    }
 }

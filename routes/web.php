@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\AssignmentController;
 use App\Http\Controllers\ChatController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\TeamController;
@@ -14,9 +16,9 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', [DashboardController::class, 'index'])
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -42,6 +44,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/teams/{team}/chat', [ChatController::class, 'show'])->name('teams.chat');
     Route::get('/teams/{team}/chat/older', [ChatController::class, 'older'])->name('teams.chat.older');
     Route::post('/teams/{team}/chat', [ChatController::class, 'store'])->name('teams.chat.store');
+
+    // notifications
+    Route::patch('/notifications/{notification}/read', [NotificationController::class, 'markRead'])->name('notifications.read');
+    Route::post('/notifications/read-all', [NotificationController::class, 'markAllRead'])->name('notifications.readAll');
 });
 
 require __DIR__ . '/auth.php';

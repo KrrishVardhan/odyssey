@@ -2,7 +2,7 @@
     <div class="flex h-screen relative">
         <x-team-nav :team="$team" active="workspace" />
 
-        <div class="flex-1 overflow-x-auto p-6">
+        <div class="flex-1 overflow-x-auto p-6" x-data="{ selectedTask: null }">
             <div class="flex items-center justify-between">
                 <button x-data x-on:click="$dispatch('create-workspace-task-modal')"
                     class="absolute right-6 bottom-6 z-20 inline-flex items-center gap-2
@@ -31,9 +31,26 @@
                             </span>
                         </div>
 
+                        {{-- Kanban --}}
                         <div class="flex-1 bg-muted/40 rounded-xl p-2 space-y-2 overflow-y-auto">
                             @forelse ($columns[$key] as $assignment)
-                                <div class="bg-card border border-border rounded-lg p-3 cursor-pointer">
+                                @php
+                                    $task = $assignment->task;
+
+                                    $taskData = [
+                                        'title' => $task->title,
+                                        'description' => $task->description,
+                                        'priority' => $task->priority,
+                                        'due_date' => $task->due_date?->format('M j, Y'),
+                                        'assignee_name' => $assignment->assignee?->name,
+                                        'status' => $assignment->status,
+                                        'creator_name' => $task->creator->name,
+                                        'rejection_reason' => $assignment->rejection_reason,
+                                    ];
+                                @endphp
+
+                                <div class="bg-card border border-border rounded-lg p-3 hover:border-foreground/20 transition-colors cursor-pointer"
+                                    x-on:click="selectedTask = @js($taskData)">
                                     <p class="text-sm font-medium text-card-foreground leading-snug">
                                         {{ $assignment->task->title }}</p>
                                     @if ($assignment->task->description)
@@ -86,6 +103,7 @@
                     </div>
                 @endforeach
             </div>
+            <x-task-detail-modal />
         </div>
     </div>
 

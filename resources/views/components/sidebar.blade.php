@@ -8,6 +8,13 @@
                   ? 'bg-primary text-primary-foreground rounded-xl'
                   : 'bg-muted text-muted-foreground hover:bg-primary hover:text-primary-foreground hover:rounded-xl' }}">
         <x-application-logo class="block h-9 w-auto fill-current" />
+        @if ($unreadCount > 0)
+            <span
+                class="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-destructive text-white text-[10px] font-semibold flex items-center justify-center">
+                {{ $unreadCount > 9 ? '9+' : $unreadCount }}
+            </span>
+        @endif
+
     </a>
 
     <div class="w-8 h-px bg-border my-2"></div>

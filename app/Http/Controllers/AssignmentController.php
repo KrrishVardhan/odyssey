@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AppNotification;
 use App\Models\Task;
 use App\Models\TaskAssignment;
 use Illuminate\Http\Request;
@@ -31,6 +32,13 @@ class AssignmentController extends Controller
             'assigned_by' => $request->user()->id,
             'status' => 'pending',
         ]);
+        AppNotification::create([
+            'user_id' => $validated['user_id'],
+            'team_id' => $task->team_id,
+            'task_id' => $task->id,
+            'type' => 'task_assigned',
+            'message' => "{$request->user()->name} assigned you to \"{$task->title}\".",
+        ]);
 
         return back()->with('status', 'Task assigned — awaiting their response.');
     }
@@ -50,6 +58,21 @@ class AssignmentController extends Controller
             'responded_at' => now(),
         ]);
 
+        // notification
+        if ($assignment->assigned_by !== $request->user()->id) {
+            $message = $validated['status'] === 'accepted'
+                ? "{$request->user()->name} accepted \"{$assignment->task->title}\"."
+                : "{$request->user()->name} declined \"{$assignment->task->title}\"" . (($validated['rejection_reason'] ?? null) ? ": {$validated['rejection_reason']}" : '.');
+
+            AppNotification::create([
+                'user_id' => $assignment->assigned_by,
+                'team_id' => $assignment->task->team_id,
+                'task_id' => $assignment->task_id,
+                'type' => $validated['status'] === 'accepted' ? 'task_accepted' : 'task_rejected',
+                'message' => $message,
+            ]);
+        }
+
         return back()->with('status', $validated['status'] === 'accepted' ? 'Task accepted.' : 'Task declined.');
     }
 
@@ -59,6 +82,17 @@ class AssignmentController extends Controller
         abort_unless(in_array($assignment->status, ['accepted', 'in_progress']), 422);
 
         $assignment->update(['status' => 'completed', 'completed_at' => now()]);
+
+        // notify
+        if ($assignment->assigned_by !== $request->user()->id) {
+            AppNotification::create([
+                'user_id' => $assignment->assigned_by,
+                'team_id' => $assignment->task->team_id,
+                'task_id' => $assignment->task_id,
+                'type' => 'task_completed',
+                'message' => "{$request->user()->name} completed \"{$assignment->task->title}\".",
+            ]);
+        }
 
         return back()->with('status', 'Task completed.');
     }

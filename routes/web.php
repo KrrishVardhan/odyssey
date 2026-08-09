@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AssignmentController;
+use App\Http\Controllers\ChatController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\TeamController;
@@ -36,6 +37,11 @@ Route::middleware('auth')->group(function () {
 
     // add member
     Route::post('/teams/{team}/members', [TeamMemberController::class, 'store'])->name('teams.members.store');
+
+    // chat
+    Route::get('/teams/{team}/chat', [ChatController::class, 'show'])->name('teams.chat');
+    Route::get('/teams/{team}/chat/older', [ChatController::class, 'older'])->name('teams.chat.older');
+    Route::post('/teams/{team}/chat', [ChatController::class, 'store'])->name('teams.chat.store');
 });
 
 require __DIR__ . '/auth.php';

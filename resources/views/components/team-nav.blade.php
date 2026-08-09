@@ -33,6 +33,17 @@
             <x-lucide-layout-list class="w-4 h-4" />
             My Workspace
         </a>
+        <a href="{{ route('teams.chat', $team) }}"
+            class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium transition-colors
+                  {{ $active === 'chat' ? 'bg-secondary text-foreground' : 'text-muted-foreground hover:bg-muted hover:text-foreground' }}">
+            @if ($active === 'chat')
+                <span class="w-1 h-1 rounded-full" style="background-color: var(--chart-1);"></span>
+            @else
+                <span class="w-1 h-1"></span>
+            @endif
+            <x-lucide-hash class="w-4 h-4" />
+            general-chat
+        </a>
     </nav>
 
     <div class="w-8 mx-auto h-px bg-border my-2"></div>
@@ -81,12 +92,14 @@
 
             <div class="mt-5">
                 <x-input-label for="member_email" value="Email" />
-                <x-text-input id="member_email" name="email" type="email" class="block mt-1.5 w-full" required autofocus placeholder="teammate@example.com" />
+                <x-text-input id="member_email" name="email" type="email" class="block mt-1.5 w-full" required
+                    autofocus placeholder="teammate@example.com" />
                 <x-input-error :messages="$errors->get('email')" class="mt-2" />
             </div>
 
             <div class="mt-6 flex justify-end gap-3">
-                <button type="button" x-on:click="$dispatch('close')" class="px-4 py-2 text-sm text-muted-foreground hover:text-foreground transition-colors">
+                <button type="button" x-on:click="$dispatch('close')"
+                    class="px-4 py-2 text-sm text-muted-foreground hover:text-foreground transition-colors">
                     Cancel
                 </button>
                 <x-primary-button>Add member</x-primary-button>

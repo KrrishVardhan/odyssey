@@ -33,7 +33,7 @@
 
                         <div class="flex-1 bg-muted/40 rounded-xl p-2 space-y-2 overflow-y-auto">
                             @forelse ($columns[$key] as $assignment)
-                                <div class="bg-card border border-border rounded-lg p-3">
+                                <div class="bg-card border border-border rounded-lg p-3 cursor-pointer">
                                     <p class="text-sm font-medium text-card-foreground leading-snug">
                                         {{ $assignment->task->title }}</p>
                                     @if ($assignment->task->description)

@@ -28,4 +28,8 @@ class Team extends Model
     {
         return $this->hasMany(Message::class);
     }
+    public function submissions()
+    {
+        return $this->hasMany(Submission::class);
+    }
 }

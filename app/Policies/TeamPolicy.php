@@ -22,6 +22,12 @@ class TeamPolicy
         return $team->members()->where('user_id', $user->id)->exists();
     }
 
+    // Reviewing submissions
+    public function reviewSubmissions(User $user, Team $team): bool
+    {
+        return in_array($user->roleInTeam($team), ['leader', 'co_leader']);
+    }
+
 
     public function viewAny(User $user): bool
     {

@@ -32,7 +32,7 @@
                         </div>
 
                         {{-- Kanban --}}
-                        <div class="flex-1 bg-muted/40 rounded-xl p-2 space-y-2 overflow-y-auto">
+                        <div class="flex-1 bg-muted/40 rounded-xl p-2 space-y-2 overflow-y-auto border-2 border-dashed">
                             @forelse ($columns[$key] as $assignment)
                                 @php
                                     $task = $assignment->task;

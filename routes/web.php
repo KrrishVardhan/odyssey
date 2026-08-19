@@ -5,6 +5,9 @@ use App\Http\Controllers\ChatController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Public\ProductController;
+use App\Http\Controllers\Public\SubmissionController as PublicSubmissionController;
+use App\Http\Controllers\SubmissionReviewController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\TeamController;
 use App\Http\Controllers\TeamMemberController;
@@ -20,10 +23,20 @@ Route::get('/dashboard', [DashboardController::class, 'index'])
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
 
+
+Route::get('/products', [ProductController::class, 'index'])->name('products.index');
+Route::get('/products/{team}', [ProductController::class, 'show'])->name('products.show');
+Route::post('/products/{team}/submissions', [PublicSubmissionController::class, 'store'])->name('products.submissions.store');
+
+
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    // submissions by customers/users
+    Route::get('/teams/{team}/submissions', [SubmissionReviewController::class, 'index'])->name('teams.submissions');
+    Route::patch('/submissions/{submission}/status', [SubmissionReviewController::class, 'updateStatus'])->name('submissions.updateStatus');
 
     // teams
     Route::get('/teams/{team}', [TeamViewController::class, 'mission'])->name('teams.show');

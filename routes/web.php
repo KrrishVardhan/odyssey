@@ -5,6 +5,7 @@ use App\Http\Controllers\ChatController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Public\FollowController;
 use App\Http\Controllers\Public\ProductController;
 use App\Http\Controllers\Public\SubmissionController as PublicSubmissionController;
 use App\Http\Controllers\SubmissionReviewController;
@@ -61,6 +62,10 @@ Route::middleware('auth')->group(function () {
     // notifications
     Route::patch('/notifications/{notification}/read', [NotificationController::class, 'markRead'])->name('notifications.read');
     Route::post('/notifications/read-all', [NotificationController::class, 'markAllRead'])->name('notifications.readAll');
+
+
+    // follow
+    Route::post('/products/{team}/follow', [FollowController::class, 'toggle'])->name('products.follow');
 });
 
 require __DIR__ . '/auth.php';

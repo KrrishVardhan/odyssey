@@ -18,6 +18,19 @@ class ProductController extends Controller
     {
         abort_unless($team->is_public, 404);
 
-        return view('public.products.show', ['team' => $team]);
+        $isFollowing = auth()->check() && $team->followers()->where('user_id', auth()->id())->exists();
+
+        $stats = [
+            'requests' => $team->submissions()->count(),
+            'planned' => $team->submissions()->where('status', 'approved')->count(),
+            'shipped' => $team->submissions()->where('status', 'resolved')->count(),
+        ];
+
+        return view('public.products.show', [
+            'team' => $team,
+            'isFollowing' => $isFollowing,
+            'followerCount' => $team->followers()->count(),
+            'stats' => $stats,
+        ]);
     }
 }

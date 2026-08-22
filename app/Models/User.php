@@ -76,4 +76,11 @@ class User extends Authenticatable
     {
         return $this->hasMany(AppNotification::class);
     }
+
+
+    // followed Teams
+    public function followedTeams()
+    {
+        return $this->belongsToMany(Team::class, 'team_followers')->withTimestamps();
+    }
 }

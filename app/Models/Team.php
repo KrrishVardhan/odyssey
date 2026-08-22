@@ -32,4 +32,10 @@ class Team extends Model
     {
         return $this->hasMany(Submission::class);
     }
+
+
+    public function followers()
+    {
+        return $this->belongsToMany(User::class, 'team_followers')->withTimestamps();
+    }
 }

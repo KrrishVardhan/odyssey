@@ -1,16 +1,43 @@
 @props(['team', 'active'])
 
 <div class="w-64 bg-card border border-border flex flex-col shrink-0 mx-3 my-2 rounded-xl">
-    <div class="px-5 py-5 flex justify-between">
+    <div class="px-5 py-3 flex flex-col gap-3">
         <div>
             <h2 class="font-semibold text-foreground truncate">{{ $team->name }}</h2>
             @if ($team->description)
                 <p class="text-xs text-muted-foreground mt-1 line-clamp-2">{{ $team->description }}</p>
             @endif
         </div>
-        @if (in_array(auth()->user()->roleInTeam($team), ['leader']))
-            <x-lucide-settings class="w-4 h-4 cursor-pointer" />
-        @endif
+        <div class="flex items-center gap-2">
+            {{-- Search --}}
+            <div class="relative flex-1">
+                <x-lucide-search class="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground" />
+
+                <x-text-input type="text" placeholder="Search"
+                    class="w-full h-8 rounded-lg border border-border/50 bg-muted/50 pl-8 pr-3 text-xs text-foreground placeholder:text-muted-foreground/70 outline-none transition-colors focus:ring focus:border-none focus:bg-muted" />
+            </div>
+
+            {{-- Submissions --}}
+            @if (in_array(auth()->user()->roleInTeam($team), ['leader', 'co_leader']))
+                <a href="{{ route('teams.submissions', $team) }}"
+                    class="relative flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-muted text-muted-foreground transition-colors hover:bg-muted/80 hover:text-foreground">
+
+                    <x-lucide-inbox class="w-4 h-4" />
+
+                    @if ($hasUnreadSubmissions)
+                        <span class="absolute right-1 top-1 w-1.5 h-1.5 rounded-full bg-destructive"></span>
+                    @endif
+                </a>
+            @endif
+
+            {{-- Add member --}}
+            @if (in_array(auth()->user()->roleInTeam($team), ['leader', 'co_leader']))
+                <button x-data x-on:click="$dispatch('add-member-modal')"
+                    class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-muted text-muted-foreground transition-colors hover:bg-muted/80 hover:text-foreground cursor-pointer">
+                    <x-lucide-user-plus class="w-4 h-4" />
+                </button>
+            @endif
+        </div>
     </div>
     <div class="w-[90%] h-px bg-border my-2 mx-auto"></div>
 
@@ -26,7 +53,6 @@
             <x-lucide-target class="w-4 h-4" />
             Mission Board
         </a>
-
         <a href="{{ route('teams.workspace', $team) }}"
             class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium transition-colors
                   {{ $active === 'workspace' ? 'bg-secondary text-foreground' : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground' }}">
@@ -49,19 +75,6 @@
             <x-lucide-hash class="w-4 h-4" />
             general-chat
         </a>
-        @if (in_array(auth()->user()->roleInTeam($team), ['leader', 'co_leader']))
-            <a href="{{ route('teams.submissions', $team) }}"
-                class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium transition-colors
-                      {{ $active === 'submissions' ? 'bg-secondary text-foreground' : 'text-muted-foreground hover:bg-muted hover:text-foreground' }}">
-                @if ($active === 'submissions')
-                    <span class="w-1 h-1 rounded-full" style="background-color: var(--chart-1);"></span>
-                @else
-                    <span class="w-1 h-1"></span>
-                @endif
-                <x-lucide-inbox class="w-4 h-4" />
-                Submissions
-            </a>
-        @endif
     </nav>
 
     <div class="w-8 mx-auto h-px bg-border my-2"></div>
@@ -69,12 +82,6 @@
     <div class="flex-1 px-3 overflow-y-auto">
         <div class="flex items-center justify-between px-2 mb-2">
             <p class="text-xs font-medium text-muted-foreground uppercase tracking-wide">Members</p>
-            @if (in_array(auth()->user()->roleInTeam($team), ['leader', 'co_leader']))
-                <button x-data x-on:click="$dispatch('add-member-modal')"
-                    class="text-muted-foreground hover:text-foreground transition-colors cursor-pointer">
-                    <x-lucide-user-plus class="w-3.5 h-3.5" />
-                </button>
-            @endif
         </div>
         <div class="flex flex-col gap-1">
             @foreach ($team->members as $member)

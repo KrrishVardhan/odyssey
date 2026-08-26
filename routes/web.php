@@ -27,7 +27,9 @@ Route::get('/dashboard', [DashboardController::class, 'index'])
 
 Route::get('/products', [ProductController::class, 'index'])->name('products.index');
 Route::get('/products/{team}', [ProductController::class, 'show'])->name('products.show');
-Route::post('/products/{team}/submissions', [PublicSubmissionController::class, 'store'])->name('products.submissions.store');
+Route::post('/products/{team}/submissions', [PublicSubmissionController::class, 'store'])
+    ->middleware('throttle:5,1')
+    ->name('products.submissions.store');
 
 
 Route::middleware('auth')->group(function () {
@@ -37,7 +39,8 @@ Route::middleware('auth')->group(function () {
 
     // submissions by customers/users
     Route::get('/teams/{team}/submissions', [SubmissionReviewController::class, 'index'])->name('teams.submissions');
-    Route::patch('/submissions/{submission}/status', [SubmissionReviewController::class, 'updateStatus'])->name('submissions.updateStatus');
+    Route::patch('/submissions/{submission}/reject', [SubmissionReviewController::class, 'reject'])->name('submissions.reject');
+    Route::post('/submissions/{submission}/tasks', [SubmissionReviewController::class, 'createTasks'])->name('submissions.tasks.store');
 
     // teams
     Route::get('/teams/{team}', [TeamViewController::class, 'mission'])->name('teams.show');

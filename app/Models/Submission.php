@@ -28,4 +28,10 @@ class Submission extends Model
     {
         return is_null($this->submitted_by);
     }
+
+
+    public function tasks()
+    {
+        return $this->hasMany(Task::class);
+    }
 }

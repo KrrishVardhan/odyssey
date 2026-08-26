@@ -157,7 +157,7 @@
             {{-- Main column --}}
             <main class="lg:col-span-2">
 
-                <div class="border border-border rounded-xl p-6">
+                <div class="border border-border rounded-xl p-6 bg-card">
 
                     <div class="flex items-center gap-2 mb-4">
                         <x-lucide-info class="w-4 h-4 text-muted-foreground" />
@@ -190,7 +190,7 @@
             <aside class="space-y-6">
 
                 {{-- Featured / latest release --}}
-                <div class="border border-border rounded-xl p-4">
+                <div class="border border-border rounded-xl p-4 bg-card">
 
                     <div class="flex items-center gap-2">
                         <x-lucide-rocket class="w-4 h-4 text-muted-foreground" />
@@ -212,7 +212,7 @@
 
 
                 {{-- Feedback --}}
-                <div class="border border-border rounded-xl p-4">
+                <div class="border border-border rounded-xl p-4 bg-card">
 
                     <div class="flex items-start gap-3 mb-4">
                         <div class="shrink-0">

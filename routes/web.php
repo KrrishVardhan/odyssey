@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AssignmentController;
+use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\NotificationController;
@@ -30,6 +31,10 @@ Route::get('/products/{team}', [ProductController::class, 'show'])->name('produc
 Route::post('/products/{team}/submissions', [PublicSubmissionController::class, 'store'])
     ->middleware('throttle:5,1')
     ->name('products.submissions.store');
+
+// google
+Route::get('/auth/google', [GoogleController::class, 'redirect'])->name('auth.google');
+Route::get('/auth/google/callback', [GoogleController::class, 'callback'])->name('auth.google.callback');
 
 
 Route::middleware('auth')->group(function () {

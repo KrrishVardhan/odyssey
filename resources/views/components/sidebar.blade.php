@@ -51,10 +51,10 @@
             <x-lucide-plus class="w-5 h-5" />
         </button>
         {{-- Discover Teams --}}
-        <button x-data x-on:click=""
-            class="flex items-center justify-center w-12 h-12 shrink-0 rounded-2xl text-primary-foreground bg-primary hover:border-primary hover:rounded-xl transition-all duration-200 cursor-pointer">
+        <a href="{{ route('products.index') }}"
+            class="flex items-center justify-center w-12 h-12 shrink-0 rounded-2xl text-primary-foreground bg-primary hover:border-primary hover:rounded-xl transition-all duration-200">
             <x-lucide-compass class="w-5 h-5" />
-        </button>
+        </a>
 
     </div>
 

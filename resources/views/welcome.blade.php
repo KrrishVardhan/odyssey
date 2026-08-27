@@ -84,7 +84,7 @@
                     </a>
                 @else
                     <a href="{{ route('register') }}"
-                        class="inline-flex items-center px-5 py-2.5 bg-linear-to-b from-primary/70 to-primary text-primary-foreground rounded-3xl text-sm font-medium hover:opacity-90 transition">
+                        class="inline-flex items-center px-5 py-2.5 bg-primary text-primary-foreground rounded-3xl text-sm font-medium hover:opacity-90 transition">
                         Get started
                     </a>
                     <a href="{{ route('login') }}"

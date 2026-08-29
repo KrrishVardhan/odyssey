@@ -13,6 +13,7 @@ use App\Http\Controllers\SubmissionReviewController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\TeamController;
 use App\Http\Controllers\TeamMemberController;
+use App\Http\Controllers\TeamSettingsController;
 use App\Http\Controllers\TeamViewController;
 use App\Http\Controllers\WorkspaceTaskController;
 use Illuminate\Support\Facades\Route;
@@ -39,7 +40,9 @@ Route::get('/auth/google/callback', [GoogleController::class, 'callback'])->name
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::patch('/profile/username', [ProfileController::class, 'updateUsername'])->name('profile.username');
+    Route::patch('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password');
+    Route::post('/profile/avatar', [ProfileController::class, 'updateAvatar'])->name('profile.avatar');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     // submissions by customers/users
@@ -52,6 +55,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/teams/{team}/workspace', [TeamViewController::class, 'workspace'])->name('teams.workspace');
     Route::post('/teams', [TeamController::class, 'store'])->name('teams.store');
     Route::post('/teams/{team}/tasks', [TaskController::class, 'store'])->name('teams.tasks.store');
+    // team settings
+    Route::get('/teams/{team}/settings', [TeamSettingsController::class, 'show'])->name('teams.settings');
+    Route::patch('/teams/{team}/settings', [TeamSettingsController::class, 'update'])->name('teams.settings.update');
+    Route::post('/teams/{team}/settings/icon', [TeamSettingsController::class, 'updateIcon'])->name('teams.settings.icon');
+    Route::patch('/teams/{team}/members/{user}/role', [TeamSettingsController::class, 'updateRole'])->name('teams.members.role');
+    Route::delete('/teams/{team}/members/{user}', [TeamSettingsController::class, 'kick'])->name('teams.members.kick');
 
     Route::post('/teams/{team}/workspace/tasks', [WorkspaceTaskController::class, 'store'])->name('teams.workspace.tasks.store');
 

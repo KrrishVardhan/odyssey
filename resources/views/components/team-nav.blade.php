@@ -2,12 +2,35 @@
 
 <div class="w-64 bg-card border border-border flex flex-col shrink-0 mx-3 my-2 rounded-xl">
     <div class="px-5 py-3 flex flex-col gap-3">
-        <div>
-            <h2 class="font-semibold text-foreground truncate">{{ $team->name }}</h2>
-            @if ($team->description)
-                <p class="text-xs text-muted-foreground mt-1 line-clamp-2">{{ $team->description }}</p>
-            @endif
+        <div class="relative" x-data="{ teamMenuOpen: false }">
+            <button type="button" x-on:click="teamMenuOpen = !teamMenuOpen" x-on:click.outside="teamMenuOpen = false"
+                class="w-full flex items-center justify-between gap-2 -mx-1 px-1 py-1 text-left">
+                <div class="min-w-0">
+                    <h2 class="font-semibold text-foreground truncate">{{ $team->name }}</h2>
+                    @if ($team->description)
+                        <p class="text-xs text-muted-foreground mt-1 line-clamp-2">{{ $team->description }}</p>
+                    @endif
+                </div>
+                <x-lucide-chevron-down class="h-4 w-4 text-muted-foreground shrink-0 transition-transform"
+                    x-bind:class="teamMenuOpen ? 'rotate-180' : ''" />
+            </button>
+
+            <div x-show="teamMenuOpen" x-cloak x-transition
+                class="absolute left-0 right-0 top-full mt-1 bg-card border border-border rounded-lg shadow-lg py-1 z-20">
+                <a href="{{ route('teams.settings', $team) }}"
+                    class="flex items-center gap-2.5 px-3 py-2 text-sm text-foreground hover:bg-muted transition-colors">
+                    <x-lucide-settings class="h-4 w-4" />
+                    Settings
+                </a>
+
+                <button type="button"
+                    class="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-destructive hover:bg-muted transition-colors">
+                    <x-lucide-log-out class="h-4 w-4" />
+                    Leave team
+                </button>
+            </div>
         </div>
+
         <div class="flex items-center gap-2">
             {{-- Search --}}
             <div class="relative flex-1">
@@ -87,11 +110,20 @@
             @foreach ($team->members as $member)
                 <div class="flex items-center gap-2 px-2 py-1.5 rounded-lg hover:bg-muted/50">
                     <div class="w-6 h-6 rounded-full bg-secondary flex items-center justify-center shrink-0">
-                        <span class="text-[10px] font-mono font-semibold text-secondary-foreground">
-                            {{ substr($member->name, 0, 1) }}
-                        </span>
+                        <div
+                            class="w-6 h-6 rounded-full bg-secondary flex items-center justify-center shrink-0 overflow-hidden">
+                            @if ($member->avatar)
+                                <div class="w-full h-full bg-cover bg-center bg-no-repeat"
+                                    style="background-image: url('{{ $member->avatar }}');"></div>
+                            @else
+                                <span class="text-xs font-mono font-semibold text-secondary-foreground">
+                                    {{ substr($member->name, 0, 1) }}
+                                </span>
+                            @endif
+                        </div>
                     </div>
-                    <span class="text-sm text-foreground truncate">{{ $member->name }}</span>
+                    <span class="text-sm text-foreground truncate"
+                        title={{ $member->name }}>{{ $member->name }}</span>
                     @if ($member->pivot->role === 'leader')
                         <span
                             class="text-[10px] text-chart-1 ml-auto shrink-0 flex items-center gap-1">{{ ucfirst(str_replace('_', ' ', $member->pivot->role)) }}

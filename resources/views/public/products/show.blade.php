@@ -37,10 +37,10 @@
 
 
     {{-- Banner --}}
-    <div class="w-full h-56 bg-muted overflow-hidden">
+    <div class="w-full h-56 rounded-xl overflow-hidden p-1">
         @if ($team->banner_image_url)
             <img src="{{ $team->banner_image_url }}" alt="{{ $team->name }} banner"
-                class="w-full h-full object-cover">
+                class="w-full h-full object-cover rounded-xl">
         @else
             <div class="w-full h-full flex items-center justify-center">
                 <div class="flex flex-col items-center gap-2 text-muted-foreground">

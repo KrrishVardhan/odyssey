@@ -28,6 +28,17 @@ class TeamPolicy
         return in_array($user->roleInTeam($team), ['leader', 'co_leader']);
     }
 
+    // update the setting
+    public function updateSettings(User $user, Team $team): bool
+    {
+        return $user->roleInTeam($team) === 'leader';
+    }
+    // kick a member
+    public function kickMember(User $user, Team $team): bool
+    {
+        return in_array($user->roleInTeam($team), ['leader', 'co_leader']);
+    }
+
 
     public function viewAny(User $user): bool
     {

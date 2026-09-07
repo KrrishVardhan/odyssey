@@ -34,4 +34,8 @@ class Submission extends Model
     {
         return $this->hasMany(Task::class);
     }
+    public function product()
+    {
+        return $this->belongsTo(Product::class);
+    }
 }

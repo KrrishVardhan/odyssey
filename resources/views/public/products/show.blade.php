@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ $team->name }} — Odyssey</title>
+    <title>{{ $product->name }} — Odyssey</title>
 
     <script>
         if (
@@ -24,7 +24,7 @@
 <body class="font-sans antialiased bg-background text-foreground min-h-screen" x-data="{ modal: null, moreOpen: false }">
 
     {{-- Navbar --}}
-    <header class="border-b border-border px-6 py-4 flex items-center justify-between">
+    <header class="px-6 py-4 flex items-center justify-between">
         <a href="/" class="font-mono text-sm font-semibold tracking-tight">
             odyssey
         </a>
@@ -38,8 +38,8 @@
 
     {{-- Banner --}}
     <div class="w-full h-56 rounded-xl overflow-hidden p-1">
-        @if ($team->banner_image_url)
-            <img src="{{ $team->banner_image_url }}" alt="{{ $team->name }} banner"
+        @if ($product->banner)
+            <img src="{{ $product->banner }}" alt="{{ $product->name }} banner"
                 class="w-full h-full object-cover rounded-xl">
         @else
             <div class="w-full h-full flex items-center justify-center">
@@ -63,11 +63,11 @@
             {{-- Logo --}}
             <div
                 class="w-24 h-24 rounded-2xl bg-card border-2 border-background flex items-center justify-center shrink-0 overflow-hidden">
-                @if ($team->icon_path)
-                    <img src="{{ $team->icon_path }}" alt="{{ $team->name }} logo" class="w-full h-full object-cover">
+                @if ($product->icon_path)
+                    <img src="{{ $product->icon_path }}" alt="{{ $product->name }} logo" class="w-full h-full object-cover">
                 @else
                     <span class="font-mono text-2xl font-semibold text-muted-foreground">
-                        {{ substr($team->name, 0, 2) }}
+                        {{ substr($product->name, 0, 2) }}
                     </span>
                 @endif
             </div>
@@ -75,7 +75,7 @@
             {{-- Name --}}
             <div class="pb-2 mt-12">
                 <h1 class="text-2xl font-semibold text-foreground">
-                    {{ $team->name }}
+                    {{ $product->name }}
                 </h1>
 
                 <p class="text-sm text-muted-foreground mt-0.5">
@@ -94,7 +94,7 @@
             {{-- Add your team's tag data here when available. --}}
 
             @auth
-                <form method="POST" action="{{ route('products.follow', $team) }}">
+                <form method="POST" action="{{ route('products.follow', $product) }}">
                     @csrf
 
                     <button type="submit"
@@ -118,10 +118,8 @@
 
 
             {{-- Contact --}}
-            <a href="mailto:{{ $team->owner->email }}"
-                class="inline-flex items-center gap-2 px-5 py-2 rounded-lg text-sm font-medium border border-border text-foreground hover:bg-muted transition">
-                <x-lucide-mail class="w-4 h-4" />
-
+            <a href="mailto:{{ $product->team->owner->email }}"
+                class="px-5 py-2 rounded-lg text-sm font-medium border border-border text-foreground hover:bg-muted transition">
                 Contact
             </a>
 
@@ -167,9 +165,9 @@
                         </h2>
                     </div>
 
-                    @if ($team->about)
+                    @if ($product->about)
                         <div class="prose prose-odyssey">
-                            {!! Str::markdown($team->about) !!}
+                            {!! Str::markdown($product->about) !!}
                         </div>
                     @else
                         <div class="flex flex-col items-center justify-center text-center py-16">
@@ -225,7 +223,7 @@
                             </p>
 
                             <p class="text-xs text-muted-foreground mt-0.5">
-                                Help make {{ $team->name }} better.
+                                Help make {{ $product->name }} better.
                             </p>
                         </div>
                     </div>
@@ -383,7 +381,7 @@
                     </h2>
 
                     <p class="text-xs text-muted-foreground">
-                        to {{ $team->name }}
+                        to {{ $product->name }}
                     </p>
                 </div>
 
@@ -391,7 +389,7 @@
 
 
             {{-- Form --}}
-            <form method="POST" action="{{ route('products.submissions.store', $team) }}" class="p-6">
+            <form method="POST" action="{{ route('products.submissions.store', $product) }}" class="p-6">
                 @csrf
 
                 <input type="hidden" name="type" x-bind:value="modal">
@@ -445,7 +443,8 @@
                         Cancel
                     </button>
 
-                    <x-primary-button class="inline-flex items-center gap-2 px-4 py-2 text-sm text-muted-foreground hover:text-foreground transition-colors">
+                    <x-primary-button
+                        class="inline-flex items-center gap-2 px-4 py-2 text-sm text-muted-foreground hover:text-foreground transition-colors">
                         <x-lucide-send class="w-4 h-4" />
 
                         Submit

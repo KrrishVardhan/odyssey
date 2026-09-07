@@ -34,8 +34,8 @@ class Team extends Model
     }
 
 
-    public function followers()
+    public function products()
     {
-        return $this->belongsToMany(User::class, 'team_followers')->withTimestamps();
+        return $this->hasMany(Product::class);
     }
 }

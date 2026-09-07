@@ -136,14 +136,102 @@
                 </div>
             </div>
 
-            {{-- Products placeholder --}}
-            <div class="bg-card border border-border rounded-xl p-5">
-                <p class="text-sm font-medium text-foreground mb-1">
-                    Products
-                </p>
-                <p class="text-sm text-muted-foreground">
-                    Coming soon — a team will be able to manage multiple public-facing products here.
-                </p>
+            {{-- Products --}}
+            <div class="bg-card border border-border rounded-xl p-5" x-data="{ productModal: false }">
+                <div class="flex items-center justify-between mb-3">
+                    <p class="text-sm font-medium text-foreground">
+                        Products
+                    </p>
+
+                    @if ($canEdit)
+                        <button type="button" x-on:click="productModal = true"
+                            class="flex items-center gap-1.5 text-xs bg-primary text-primary-foreground rounded-md px-3 py-1.5 hover:opacity-90 transition">
+                            <x-lucide-plus class="h-3.5 w-3.5" />
+                            New product
+                        </button>
+                    @endif
+                </div>
+
+                <div class="space-y-2">
+                    @forelse ($team->products as $product)
+                        <div class="flex items-center justify-between border border-border rounded-lg p-3">
+                            <div class="flex items-center gap-3">
+                                <div
+                                    class="w-9 h-9 rounded-lg bg-secondary flex items-center justify-center overflow-hidden shrink-0">
+                                    @if ($product->icon_path)
+                                        <img src="{{ $product->icon_path }}" class="w-full h-full object-cover">
+                                    @else
+                                        <span class="text-xs font-mono font-semibold text-secondary-foreground">
+                                            {{ substr($product->name, 0, 2) }}
+                                        </span>
+                                    @endif
+                                </div>
+                                <div>
+                                    <p class="text-sm text-foreground">{{ $product->name }}</p>
+                                    <p class="text-xs text-muted-foreground">
+                                        {{ $product->is_public ? 'Public' : 'Private' }}
+                                    </p>
+                                </div>
+                            </div>
+
+                            @if ($canEdit)
+                                <form method="POST" action="{{ route('products.update', $product) }}">
+                                    @csrf
+                                    @method('PATCH')
+                                    <input type="hidden" name="name" value="{{ $product->name }}">
+                                    <input type="hidden" name="is_public"
+                                        value="{{ $product->is_public ? '0' : '1' }}">
+
+                                    <button
+                                        class="text-xs border border-border text-muted-foreground rounded-md px-3 py-1.5 hover:bg-muted transition">
+                                        {{ $product->is_public ? 'Make private' : 'Make public' }}
+                                    </button>
+                                </form>
+                            @endif
+                        </div>
+                    @empty
+                        <p class="text-sm text-muted-foreground">
+                            No products yet.
+                        </p>
+                    @endforelse
+                </div>
+
+                @if ($canEdit)
+                    <div x-show="productModal" x-cloak
+                        class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center px-4"
+                        x-on:click.self="productModal = false" x-on:keydown.escape.window="productModal = false">
+                        <div class="bg-card border border-border rounded-xl shadow-xl w-full max-w-md p-6">
+                            <form method="POST" action="{{ route('teams.products.store', $team) }}">
+                                @csrf
+
+                                <h2 class="text-lg font-semibold text-foreground">
+                                    New product
+                                </h2>
+
+                                <div class="mt-4">
+                                    <x-input-label for="product_name" value="Name" />
+                                    <x-text-input id="product_name" name="name" type="text"
+                                        class="block mt-1.5 w-full" required />
+                                    <x-input-error :messages="$errors->get('name')" class="mt-1" />
+                                </div>
+
+                                <div class="mt-4">
+                                    <x-input-label for="product_description" value="Short description" />
+                                    <x-text-input id="product_description" name="description" type="text"
+                                        class="block mt-1.5 w-full" />
+                                </div>
+
+                                <div class="mt-6 flex justify-end gap-3">
+                                    <button type="button" x-on:click="productModal = false"
+                                        class="px-4 py-2 text-sm text-muted-foreground hover:text-foreground transition-colors">
+                                        Cancel
+                                    </button>
+                                    <x-primary-button>Create</x-primary-button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                @endif
             </div>
 
             @if ($canEdit)

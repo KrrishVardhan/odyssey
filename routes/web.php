@@ -5,9 +5,10 @@ use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Public\FollowController;
-use App\Http\Controllers\Public\ProductController;
+use App\Http\Controllers\Public\ProductController as PublicProductController;
 use App\Http\Controllers\Public\SubmissionController as PublicSubmissionController;
 use App\Http\Controllers\SubmissionReviewController;
 use App\Http\Controllers\TaskController;
@@ -27,9 +28,9 @@ Route::get('/dashboard', [DashboardController::class, 'index'])
     ->name('dashboard');
 
 
-Route::get('/products', [ProductController::class, 'index'])->name('products.index');
-Route::get('/products/{team}', [ProductController::class, 'show'])->name('products.show');
-Route::post('/products/{team}/submissions', [PublicSubmissionController::class, 'store'])
+Route::get('/products', [PublicProductController::class, 'index'])->name('products.index');
+Route::get('/products/{product}', [PublicProductController::class, 'show'])->name('products.show');
+Route::post('/products/{product}/submissions', [PublicSubmissionController::class, 'store'])
     ->middleware('throttle:5,1')
     ->name('products.submissions.store');
 
@@ -82,7 +83,9 @@ Route::middleware('auth')->group(function () {
 
 
     // follow
-    Route::post('/products/{team}/follow', [FollowController::class, 'toggle'])->name('products.follow');
+    Route::post('/products/{product}/follow', [FollowController::class, 'toggle'])->name('products.follow');
+    Route::post('/teams/{team}/products', [ProductController::class, 'store'])->name('teams.products.store');
+    Route::patch('/products/{product}', [ProductController::class, 'update'])->name('products.update');
 });
 
 require __DIR__ . '/auth.php';

@@ -3,15 +3,15 @@
 namespace App\Http\Controllers\Public;
 
 use App\Http\Controllers\Controller;
+use App\Models\Product;
 use App\Models\Submission;
-use App\Models\Team;
 use Illuminate\Http\Request;
 
 class SubmissionController extends Controller
 {
-    public function store(Request $request, Team $team)
+    public function store(Request $request, Product $product)
     {
-        abort_unless($team->is_public, 404);
+        abort_unless($product->is_public, 404);
 
         $validated = $request->validate([
             'type' => 'required|in:bug,feature,feedback',
@@ -21,7 +21,8 @@ class SubmissionController extends Controller
         ]);
 
         Submission::create([
-            'team_id' => $team->id,
+            'product_id' => $product->id,
+            'team_id' => $product->team_id,
             'type' => $validated['type'],
             'title' => $validated['title'],
             'description' => $validated['description'],

@@ -13,16 +13,19 @@ class SubmissionReviewController extends Controller
     {
         $this->authorize('reviewSubmissions', $team);
 
-        $submissions = $team->submissions()
+        $submissions = Submission::whereIn('product_id', $team->products()->pluck('id'))
+            ->when($request->product, fn($q) => $q->where('product_id', $request->product))
             ->when($request->type, fn($q) => $q->where('type', $request->type))
             ->when($request->status, fn($q) => $q->where('status', $request->status))
-            ->with('tasks')
+            ->with(['tasks', 'product'])
             ->latest()
             ->get();
 
         return view('teams.submissions', [
             'team' => $team,
             'submissions' => $submissions,
+            'products' => $team->products,
+            'product' => $request->product ?? '',
             'type' => $request->type ?? '',
             'status' => $request->status ?? '',
         ]);
@@ -30,7 +33,7 @@ class SubmissionReviewController extends Controller
 
     public function reject(Request $request, Submission $submission)
     {
-        $this->authorize('reviewSubmissions', $submission->team);
+        $this->authorize('reviewSubmissions', $submission->product->team);
 
         $submission->update(['status' => 'rejected', 'reviewed_by' => $request->user()->id]);
 
@@ -39,7 +42,7 @@ class SubmissionReviewController extends Controller
 
     public function createTasks(Request $request, Submission $submission)
     {
-        $this->authorize('reviewSubmissions', $submission->team);
+        $this->authorize('reviewSubmissions', $submission->product->team);
 
         $validated = $request->validate([
             'tasks' => 'required|array|min:1',
@@ -51,7 +54,7 @@ class SubmissionReviewController extends Controller
 
         DB::transaction(function () use ($validated, $submission, $request) {
             foreach ($validated['tasks'] as $taskData) {
-                $submission->team->tasks()->create([
+                $submission->product->team->tasks()->create([
                     'submission_id' => $submission->id,
                     'created_by' => $request->user()->id,
                     'title' => $taskData['title'],

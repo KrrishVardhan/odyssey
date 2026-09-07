@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Product;
 use App\Models\Task;
 use App\Models\Team;
 use App\Models\User;
@@ -38,6 +39,15 @@ class DatabaseSeeder extends Seeder
         $leafVillage->members()->attach($leafMembers->first()->id, ['role' => 'co_leader', 'joined_at' => now()]);
         $leafVillage->members()->attach($leafMembers->slice(1)->pluck('id'), ['role' => 'member', 'joined_at' => now()]);
 
+        $leafProduct = Product::create([
+            'team_id' => $leafVillage->id,
+            'name' => 'Odyssey',
+            'slug' => 'odyssey-' . Str::random(5),
+            'description' => 'Ship better products together.',
+            'about' => "Odyssey is a product feedback and shipping platform built around one simple idea: feedback becomes actionable work.",
+            'is_public' => true,
+        ]);
+
         // --- Team B: Ember Village ---
         $emberLeader = User::create([
             'name' => 'Itachi',
@@ -64,9 +74,22 @@ class DatabaseSeeder extends Seeder
         $emberVillage->members()->attach($emberMembers->first()->id, ['role' => 'co_leader', 'joined_at' => now()]);
         $emberVillage->members()->attach($emberMembers->slice(1)->pluck('id'), ['role' => 'member', 'joined_at' => now()]);
 
+        $emberProduct = Product::create([
+            'team_id' => $emberVillage->id,
+            'name' => 'Shadow Dispatch',
+            'slug' => 'shadow-dispatch-' . Str::random(5),
+            'description' => 'AI-powered mission routing for field ops.',
+            'about' => "Shadow Dispatch coordinates mission assignments in real time, so no operative is ever left without orders.",
+            'is_public' => true,
+        ]);
+
         // --- Tasks + assignments, mixed states, both teams ---
         $this->seedHackathonTasks($leafVillage, $leafLeader, $leafMembers);
         $this->seedHackathonTasks($emberVillage, $emberLeader, $emberMembers);
+
+        // --- Submissions, tied to each team's product ---
+        $this->seedSubmissions($leafProduct);
+        $this->seedSubmissions($emberProduct);
     }
 
     private function seedHackathonTasks(Team $team, User $leader, $members): void
@@ -79,7 +102,7 @@ class DatabaseSeeder extends Seeder
             ['title' => 'Write pitch deck outline', 'priority' => 'medium', 'status' => 'pending'],
             ['title' => 'Record demo video', 'priority' => 'low', 'status' => 'pending'],
             ['title' => 'Fix mobile responsiveness bug', 'priority' => 'medium', 'status' => 'rejected'],
-            ['title' => 'Deploy to staging', 'priority' => 'high', 'status' => null], // unassigned, sits in To Do
+            ['title' => 'Deploy to staging', 'priority' => 'high', 'status' => null],
         ];
 
         foreach ($tasks as $t) {
@@ -113,6 +136,28 @@ class DatabaseSeeder extends Seeder
             }
 
             $task->assignments()->create($data);
+        }
+    }
+
+    private function seedSubmissions(Product $product): void
+    {
+        $entries = [
+            ['type' => 'bug', 'title' => 'Login button unresponsive on Safari', 'status' => 'submitted'],
+            ['type' => 'feature', 'title' => 'Add dark mode to the dashboard', 'status' => 'submitted'],
+            ['type' => 'feedback', 'title' => 'Really enjoying the new UI!', 'status' => 'resolved'],
+            ['type' => 'improvement', 'title' => 'Make the search bar faster', 'status' => 'under_review'],
+        ];
+
+        foreach ($entries as $entry) {
+            $product->submissions()->create([
+                'team_id' => $product->team_id,
+                'type' => $entry['type'],
+                'status' => $entry['status'],
+                'title' => $entry['title'],
+                'description' => $entry['title'] . ' — reported during the demo hackathon.',
+                'raw_input' => $entry['title'],
+                'submitter_email' => 'anon' . rand(100, 999) . '@example.com',
+            ]);
         }
     }
 }

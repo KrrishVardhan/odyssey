@@ -38,7 +38,11 @@ class TeamPolicy
     {
         return in_array($user->roleInTeam($team), ['leader', 'co_leader']);
     }
-
+    // manage products
+    public function manageProducts(User $user, Team $team): bool
+    {
+        return $user->roleInTeam($team) === 'leader';
+    }
 
     public function viewAny(User $user): bool
     {

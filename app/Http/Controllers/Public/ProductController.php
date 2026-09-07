@@ -3,33 +3,33 @@
 namespace App\Http\Controllers\Public;
 
 use App\Http\Controllers\Controller;
-use App\Models\Team;
+use App\Models\Product;
 
 class ProductController extends Controller
 {
     public function index()
     {
-        $teams = Team::where('is_public', true)->orderBy('name')->get();
+        $products = Product::where('is_public', true)->with('team')->orderBy('name')->get();
 
-        return view('public.products.index', ['teams' => $teams]);
+        return view('public.products.index', ['products' => $products]);
     }
 
-    public function show(Team $team)
+    public function show(Product $product)
     {
-        abort_unless($team->is_public, 404);
+        abort_unless($product->is_public, 404);
 
-        $isFollowing = auth()->check() && $team->followers()->where('user_id', auth()->id())->exists();
+        $isFollowing = auth()->check() && $product->followers()->where('user_id', auth()->id())->exists();
 
         $stats = [
-            'requests' => $team->submissions()->count(),
-            'planned' => $team->submissions()->where('status', 'approved')->count(),
-            'shipped' => $team->submissions()->where('status', 'resolved')->count(),
+            'requests' => $product->submissions()->count(),
+            'planned' => $product->submissions()->where('status', 'approved')->count(),
+            'shipped' => $product->submissions()->where('status', 'resolved')->count(),
         ];
 
         return view('public.products.show', [
-            'team' => $team,
+            'product' => $product,
             'isFollowing' => $isFollowing,
-            'followerCount' => $team->followers()->count(),
+            'followerCount' => $product->followers()->count(),
             'stats' => $stats,
         ]);
     }

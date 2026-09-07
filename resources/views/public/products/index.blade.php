@@ -15,8 +15,10 @@
 </head>
 
 <body class="font-sans antialiased bg-background text-foreground min-h-screen">
-    <header class="border-b border-border px-6 py-4">
-        <a href="/" class="font-mono text-sm font-semibold tracking-tight">odyssey</a>
+    <header class="px-6 py-4 flex items-center justify-between">
+        <a href="/" class="font-mono text-sm font-semibold tracking-tight">
+            odyssey
+        </a>
     </header>
 
     <div class="max-w-3xl mx-auto px-6 py-16 text-center">
@@ -25,21 +27,21 @@
     </div>
 
     <div class="max-w-3xl mx-auto px-6 pb-16 space-y-3">
-        @forelse ($teams as $team)
-            <a href="{{ route('products.show', $team) }}"
+        @forelse ($products as $product)
+            <a href="{{ route('products.show', $product) }}"
                 class="flex items-center gap-4 bg-card border border-border rounded-xl p-4 hover:border-foreground/20 transition-colors">
                 <div
                     class="w-12 h-12 rounded-xl bg-secondary flex items-center justify-center shrink-0 overflow-hidden">
-                    @if ($team->icon_path)
-                        <img src="{{ $team->icon_path }}" class="w-full h-full object-cover">
+                    @if ($product->icon_path)
+                        <img src="{{ $product->icon_path }}" class="w-full h-full object-cover">
                     @else
                         <span
-                            class="font-mono text-sm font-semibold text-secondary-foreground">{{ substr($team->name, 0, 2) }}</span>
+                            class="font-mono text-sm font-semibold text-secondary-foreground">{{ substr($product->name, 0, 2) }}</span>
                     @endif
                 </div>
                 <div>
-                    <p class="font-medium text-foreground">{{ $team->name }}</p>
-                    <p class="text-sm text-muted-foreground line-clamp-1">{{ $team->description }}</p>
+                    <p class="font-medium text-foreground">{{ $product->name }}</p>
+                    <p class="text-sm text-muted-foreground line-clamp-1">{{ $product->description }}</p>
                 </div>
             </a>
         @empty

@@ -78,9 +78,9 @@ class User extends Authenticatable
     }
 
 
-    // followed Teams
-    public function followedTeams()
+    // followed Products
+    public function followedProducts()
     {
-        return $this->belongsToMany(Team::class, 'team_followers')->withTimestamps();
+        return $this->belongsToMany(Product::class, 'product_followers')->withTimestamps();
     }
 }

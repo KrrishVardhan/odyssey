@@ -37,7 +37,7 @@
 
 
     {{-- Banner --}}
-    <div class="w-full h-56 rounded-xl overflow-hidden p-1">
+    <div class="w-full h-72 rounded-xl overflow-hidden p-1">
         @if ($product->banner)
             <img src="{{ $product->banner }}" alt="{{ $product->name }} banner"
                 class="w-full h-full object-cover rounded-xl">
